@@ -2,13 +2,12 @@ package com.manoj.eventclassifier.domain
 
 import com.manoj.eventclassifier.data.TemperatureSensorManager
 
-class TemperatureClassificationUseCase(private val sensorManager: TemperatureSensorManager) {
-
-    suspend fun initialize() {
+class TemperatureClassificationUseCase(private val sensorManager: TemperatureSensorManager) : ClassificationUseCase<List<Float>, Boolean> {
+    override suspend fun initialize() {
         sensorManager.initialize()
     }
 
-    suspend operator fun invoke(input: List<Float>): Boolean {
+    override suspend operator fun invoke(input: List<Float>): Boolean {
         if (input.size != 3) {
             throw IllegalArgumentException("Input list must contain 3 elements")
         }

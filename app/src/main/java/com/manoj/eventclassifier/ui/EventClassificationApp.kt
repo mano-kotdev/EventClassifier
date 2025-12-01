@@ -20,6 +20,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.manoj.eventclassifier.ui.feature.energyMeter.EnergyMeterScreen
+import com.manoj.eventclassifier.ui.feature.flowMeter.FlowMeterScreen
+import com.manoj.eventclassifier.ui.feature.temperature.TemperatureSensorScreen
 
 enum class Screen(val title: String) {
     Home("Event Classification"),

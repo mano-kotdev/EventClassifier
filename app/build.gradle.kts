@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.tensorflow.lite)
+    implementation(libs.tensorflow.lite.ops)
     implementation(libs.tensorflow.lite.support)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
