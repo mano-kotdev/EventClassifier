@@ -5,6 +5,21 @@ plugins {
 }
 
 android {
+    val signingKeystore = providers.environmentVariable("SIGNING_KEYSTORE")
+    val keyStorePassword = providers.environmentVariable("KEYSTORE_PASSWORD")
+    val alias = providers.environmentVariable("KEY_ALIAS")
+    if (signingKeystore.isPresent) {
+        signingConfigs {
+            create("release") {
+                storeFile =
+                    rootProject.file(signingKeystore.get())
+                storePassword = keyStorePassword.get()
+                keyAlias = alias.get()
+                keyPassword = keyStorePassword.get()
+            }
+        }
+    }
+
     namespace = "com.manoj.eventclassifier"
     compileSdk {
         version = release(36)
@@ -27,6 +42,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            if (signingConfigs.findByName("release") != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     compileOptions {
