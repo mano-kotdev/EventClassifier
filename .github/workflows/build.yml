@@ -20,6 +20,11 @@ jobs:
         run: chmod +x gradlew
       - name: decode keystore
         run: echo "${{ secrets.SIGNING_KEYSTORE}}" | base64 --decode > keystore.jks
+      - name: Debug keystore generated in CI
+        run: |
+          ls -lh keystore.jks
+          file keystore.jks
+          keytool -list -v -keystore keystore.jks -storepass "${{ secrets.SIGNING_KEYSTORE_PASSWORD }}"
       - name: set environment variables
         run: |
           echo "SIGNING_KEYSTORE=$PWD/keystore.jks" >> $GITHUB_ENV
