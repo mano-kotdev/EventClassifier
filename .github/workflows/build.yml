@@ -24,7 +24,7 @@ jobs:
         run: |
           ls -lh keystore.jks
           file keystore.jks
-          keytool -list -v -keystore keystore.jks -storepass "${{ secrets.SIGNING_KEYSTORE_PASSWORD }}"
+          keytool -list -v -keystore keystore.jks -storepass "${{ secrets.KEYSTORE_PASSWORD }}"
       - name: set environment variables
         run: |
           echo "SIGNING_KEYSTORE=$PWD/keystore.jks" >> $GITHUB_ENV
