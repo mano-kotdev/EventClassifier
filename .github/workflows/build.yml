@@ -19,7 +19,7 @@ jobs:
       - name: make gradlew executable
         run: chmod +x gradlew
       - name: decode keystore
-        run: echo "${{ secrets.SIGNING_KEYSTORE}}" | base64 --decode > keystore.jks
+        run: echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > keystore.jks
       - name: Debug keystore generated in CI
         run: |
           ls -lh keystore.jks
