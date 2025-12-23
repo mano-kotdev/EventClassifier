@@ -50,7 +50,7 @@ class EnergyMeterViewModel(private val useCase: EnergyMeterClassificationUseCase
                 val readingInterval = 15 * 60 * 1000L
                 val resultList = mutableListOf<String>()
                 for (i in 0 until 100) {
-                    val timestamp = currentTime + (i * readingInterval)
+                    val timestamp = currentTime - ((100 - i) * readingInterval)
                     val energyKwh = if (i < 97) {
                         baseValue + (Math.random().toFloat() * 0.5f)
                     } else {

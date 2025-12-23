@@ -2,25 +2,28 @@ package com.manoj.eventclassifier.data
 
 import android.content.Context
 import android.util.Log
-import java.io.FileInputStream
-import java.nio.MappedByteBuffer
-import java.nio.channels.FileChannel
+import com.google.ai.edge.litert.CompiledModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import org.tensorflow.lite.Interpreter
 
 abstract class BaseClassifierManager(protected val context: Context) {
 
-    protected var interpreter: Interpreter? = null
+    protected var model: CompiledModel? = null
     var isInitialized = false
         protected set
 
     protected abstract val modelPath: String
     protected abstract val paramsPath: String
-    
-    protected open fun initializeInterpreter(model: MappedByteBuffer) {
-        interpreter = Interpreter(model)
+    /**
+     * Initializes the LiteRT [CompiledModel] using the model file located in the assets.
+     * This method can be overridden by subclasses to provide custom initialization logic.
+     */
+    protected open fun initializeModel() {
+        model = CompiledModel.create(
+            context.assets,
+            modelPath,
+        )
     }
 
     protected abstract fun parseParams(json: JSONObject)
@@ -28,8 +31,7 @@ abstract class BaseClassifierManager(protected val context: Context) {
     suspend fun initialize() {
         withContext(Dispatchers.IO) {
             isInitialized = try {
-                val model = loadModel()
-                initializeInterpreter(model)
+                initializeModel()
                 loadAndParseParams()
                 true
             } catch (e: Exception) {
@@ -39,16 +41,16 @@ abstract class BaseClassifierManager(protected val context: Context) {
         }
     }
 
-    private fun loadModel(): MappedByteBuffer {
-        val assetsManager = context.assets
-        val fileDescriptor = assetsManager.openFd(modelPath)
-        val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
-        val startOffset = fileDescriptor.startOffset
-        val declaredLength = fileDescriptor.declaredLength
-        val fileChannel = inputStream.channel
-        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)
-    }
-
+    /**
+     * Loads the configuration parameters from a JSON file located in the app assets
+     * and parses them using [parseParams].
+     *
+     * This method reads the file specified by [paramsPath], converts it into a
+     * [JSONObject], and delegates the actual parameter extraction to the subclass
+     * implementation of [parseParams].
+     *
+     * @throws Exception if the file cannot be read or if the JSON is malformed.
+     */
     private fun loadAndParseParams() {
         try {
             val jsonString = context.assets.open(paramsPath).bufferedReader().use { it.readText() }
@@ -62,9 +64,9 @@ abstract class BaseClassifierManager(protected val context: Context) {
 
     fun close() {
         if (isInitialized) {
-            interpreter?.close()
+            model?.close()
             isInitialized = false
-            Log.d(this::class.java.simpleName, "Interpreter closed")
+            Log.d(this::class.java.simpleName, "Model closed")
         }
     }
 }

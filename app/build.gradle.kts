@@ -27,7 +27,7 @@ android {
 
     defaultConfig {
         applicationId = "com.manoj.eventclassifier"
-        minSdk = 30
+        minSdk = 29
         targetSdk = 36
         versionCode = 1
         versionName = "1"
@@ -69,9 +69,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.tensorflow.lite)
-    implementation(libs.tensorflow.lite.ops)
-    implementation(libs.tensorflow.lite.support)
+    implementation(libs.litert)
+    implementation(libs.icons)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
